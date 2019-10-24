@@ -1,0 +1,26 @@
+docker run --rm -v $PWD:/app composer:1.8 install
+
+docker network create wp
+
+docker volume create wp-data
+
+docker run --name db --net=wp -v wp-data:/var/lib/mysql \
+-e MYSQL_DATABASE=wordpress -e MYSQL_USER=wp \
+-e MYSQL_PASSWORD=w0rdpr355 -e MYSQL_ROOT_PASSWORD=r00tr00t \
+mysql:5.6
+
+docker run --name wp --net=wp -v $PWD:/var/www/html \
+-e DB_NAME=wordpress -e DB_USER=wp -e DB_PASSWORD=w0rdpr355 \
+-e DB_HOST=db -e WP_ENV=development -e WP_HOME=http://localhost:8000 \
+-e WP_SITEURL=http://localhost:8000/wp \
+-p 8000:80 \
+php:7.2-apache
+
+docker exec -it wp /bin/bash
+
+docker-php-ext-install mysqli
+
+cp /var/www/html/config/apache/wordpress.conf /etc/apache2/sites-available/
+a2dissite 000-default
+a2ensite wordpress
+service apache2 reload
