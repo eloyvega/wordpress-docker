@@ -6,11 +6,13 @@ services:
     restart: always
     volumes:
       - wp_bedrock_data:/var/lib/mysql
+    networks:
+      - wp_compose
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wp
       MYSQL_PASSWORD: w0rdpr355
-      MYSQL_RANDOM_ROOT_PASSWORD: r00tr00t
+      MYSQL_ROOT_PASSWORD: r00tr00t
 
   wordpress:
     depends_on:
@@ -19,10 +21,10 @@ services:
       context: .
     image: wp-bedrock
     restart: always
-    links:
-      - db
     ports:
       - 8000:80
+    networks:
+      - wp_compose
     environment:
       DB_NAME: wordpress
       DB_USER: wp
@@ -31,14 +33,8 @@ services:
       WP_ENV: development
       WP_HOME: http://localhost:8000
       WP_SITEURL: http://localhost:8000/wp
-      AUTH_KEY: generateme
-      SECURE_AUTH_KEY: generateme
-      LOGGED_IN_KEY: generateme
-      NONCE_KEY: generateme
-      AUTH_SALT: generateme
-      SECURE_AUTH_SALT: generateme
-      LOGGED_IN_SALT: generateme
-      NONCE_SALT: generateme
 
 volumes:
   wp_bedrock_data:
+networks:
+  wp_compose:
