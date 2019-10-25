@@ -11,9 +11,9 @@ mysql:5.6
 
 docker run --name wp --net=wp -v $PWD:/var/www/html \
 -e DB_NAME=wordpress -e DB_USER=wp -e DB_PASSWORD=w0rdpr355 \
--e DB_HOST=db -e WP_ENV=development -e WP_HOME=http://localhost:8000 \
--e WP_SITEURL=http://localhost:8000/wp \
--p 8000:80 \
+-e DB_HOST=db -e WP_ENV=development -e WP_HOME=http://localhost:8080 \
+-e WP_SITEURL=http://localhost:8080/wp \
+-p 8080:80 \
 php:7.2-apache
 
 docker exec -it wp /bin/bash
