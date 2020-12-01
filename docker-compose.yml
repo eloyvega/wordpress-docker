@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.6
+    restart: always
+    volumes:
+      - wp_bedrock_data:/var/lib/mysql
+    networks:
+      - wp-network
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: w0rdpr355
+      MYSQL_ROOT_PASSWORD: r00tr00t
+
+  wordpress:
+    depends_on:
+      - db
+    build:
+      context: .
+    image: wp-bedrock
+    restart: always
+    ports:
+      - 8080:80
+    networks:
+      - wp-network
+    environment:
+      DB_NAME: wordpress
+      DB_USER: wp
+      DB_PASSWORD: w0rdpr355
+      DB_HOST: db
+      WP_ENV: development
+      WP_HOME: http://localhost:8080
+      WP_SITEURL: http://localhost:8080/wp
+
+volumes:
+  wp_bedrock_data:
+networks:
+  wp-network:
